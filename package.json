@@ -21,7 +21,6 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "angular": "^1.7.1",
-    "angularfire": "^2.3.0",
     "angularfire2": "^5.0.0-rc.10",
     "core-js": "^2.5.4",
     "firebase": "^5.0.4",

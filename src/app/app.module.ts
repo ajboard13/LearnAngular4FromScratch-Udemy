@@ -12,13 +12,16 @@ import { MembersComponent } from './members/members.component';
 import { AuthGuard } from './auth.service';
 import { routes } from './app.routes';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBoIS_aIZhjpaBUpU-DGvAZQ17_IsGb5AU',
   authDomain: 'dominioncounter.firebaseapp.com',
   databaseURL: 'https://dominioncounter.firebaseio.com',
   storageBucket: 'dominioncounter.appspot.com',
-  messagingSenderId: '450009917595'
+  messagingSenderId: '450009917595',
+  projectId: 'dominioncounter'
 };
 
 @NgModule({
@@ -35,7 +38,9 @@ export const firebaseConfig = {
     HttpModule,
     AngularFireAuthModule,
     AngularFireModule.initializeApp(firebaseConfig),
-    routes
+    routes,
+    AngularFirestoreModule,
+    BrowserAnimationsModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
