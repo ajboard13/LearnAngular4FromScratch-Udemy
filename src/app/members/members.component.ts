@@ -3,7 +3,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { moveIn, fallIn, moveInLeft } from '../router.animations';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, docChanges } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { Timestamp } from 'rxjs';
@@ -43,22 +43,38 @@ interface Room {
 export class MembersComponent implements OnInit {
   name: any;
   photoUrl: string;
+  acctId: string;
   state: string = '';
+  acctExists: boolean;
 
   player: AngularFirestoreDocument<Player>;
   currentPlayer: Observable<Player>;
 
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
-
+    this.acctExists = false;
     this.af.authState.subscribe(auth => {
       if(auth) {
         this.name = auth.displayName;
         this.photoUrl = auth.photoURL;
-        console.log(auth);
+        this.acctId = auth.uid;
+        this.getPlayerInfo();
       }
     });
 
+  }
+  
+  getPlayerInfo() {
+    this.player = this.afs.doc('Players/' + this.acctId);
+    this.currentPlayer = this.player.valueChanges();
+    this.afs.firestore.doc('Players/' + this.acctId).get().then(docChanges => {
+      if(docChanges.exists) {
+        this.acctExists = true;
+      }
+    })
+    
+    console.log(this.currentPlayer);
+    console.log('Players/' + this.acctId);
   }
 
   logout() {
@@ -67,9 +83,6 @@ export class MembersComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.player = this.afs.doc('Players/9QUPzlolp1sLOXkl7k1M');
-    this.currentPlayer = this.player.valueChanges();
-    console.log(this.currentPlayer);
   }
 
 }

@@ -21,6 +21,11 @@ h2 img {
     margin:0;
 }
 
+h3 {
+    padding-left: 48px;
+    padding-bottom: 36px;
+}
+
 #page {
     padding:3em;
     margin:0;

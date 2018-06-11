@@ -1,0 +1,10 @@
+<div class="form-container">
+
+  <h2>Create Username</h2>
+
+  <span class="error" *ngIf="error" [@fallIn]='state'>Username can not be empty.</span>
+
+  <input type="text" placeholder="UserName" [(ngModel)]="UserName" name="UserName" class="txt" required>
+
+  <button type="submit" (click)="addPlayer()" class="basic-btn">Create my account</button>
+</div>

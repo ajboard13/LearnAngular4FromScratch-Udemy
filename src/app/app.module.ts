@@ -14,6 +14,7 @@ import { routes } from './app.routes';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegistrationComponent } from './registration/registration.component';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBoIS_aIZhjpaBUpU-DGvAZQ17_IsGb5AU',
@@ -30,7 +31,8 @@ export const firebaseConfig = {
     LoginComponent,
     EmailComponent,
     SignupComponent,
-    MembersComponent
+    MembersComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
