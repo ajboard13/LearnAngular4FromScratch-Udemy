@@ -16,6 +16,25 @@ h2 img {
     vertical-align: sub;
 }
 
+
+#add-room-button {
+    background-color: green;
+    margin: 24px;
+    width: 75%;
+}
+
+.join-room-button {
+    background-color: yellow;
+    margin: 24px;
+    width: fit-content;
+}
+
+span {
+    font-size: .75em;
+    font-family: monospace;
+    color: darkgoldenrod;
+}
+
 .basic-btn {
     width:100px;
     margin:0;

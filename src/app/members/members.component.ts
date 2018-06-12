@@ -45,20 +45,23 @@ export class MembersComponent implements OnInit {
   photoUrl: string;
   acctId: string;
   state: string = '';
-  acctExists: boolean;
+
+  roomsCollection: AngularFirestoreCollection<Room>;
+  rooms: any;
 
   player: AngularFirestoreDocument<Player>;
   currentPlayer: Observable<Player>;
 
 
+
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
-    this.acctExists = false;
     this.af.authState.subscribe(auth => {
       if(auth) {
         this.name = auth.displayName;
         this.photoUrl = auth.photoURL;
         this.acctId = auth.uid;
         this.getPlayerInfo();
+        this.getRooms();
       }
     });
 
@@ -67,14 +70,21 @@ export class MembersComponent implements OnInit {
   getPlayerInfo() {
     this.player = this.afs.doc('Players/' + this.acctId);
     this.currentPlayer = this.player.valueChanges();
-    this.afs.firestore.doc('Players/' + this.acctId).get().then(docChanges => {
-      if(docChanges.exists) {
-        this.acctExists = true;
-      }
-    })
-    
-    console.log(this.currentPlayer);
-    console.log('Players/' + this.acctId);
+  }
+
+  getRooms() {
+    this.roomsCollection = this.afs.collection('Rooms');
+    this.rooms = this.roomsCollection.snapshotChanges().map(actions => {
+      return actions.map(a => {
+        const data = a.payload.doc.data() as Room;
+        const id = a.payload.doc.id;
+        return{id, data}
+      })
+    });
+  }
+
+  goToRoom(roomId){
+    this.router.navigate(['/room', {'roomId':roomId}]);
   }
 
   logout() {

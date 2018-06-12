@@ -6,13 +6,13 @@
     </header>
     <div id="page" [@moveInLeft]="state">
       <h2><img src="{{ photoUrl }}"/>Hey {{ currentPlayer.UserName }}!</h2>
-      
-
-      <img src="assets/images/filler.png" />
+      <button id="add-room-button">Create new room</button>
+      <ul>
+        <li *ngFor="let room of rooms | async as rooms">
+          <h3>{{ room.data.roomName }}   <span>Players: {{ room.data.playerCount }}</span>   <button (click)="goToRoom(room.id)" class="join-room-button">Join!</button></h3>
+        </li>
+      </ul>
     </div>
-
-      <h3>{{ currentPlayer.UserName }}</h3>
-    
   </div>
 </ng-container>
 

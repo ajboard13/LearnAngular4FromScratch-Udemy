@@ -1,0 +1,75 @@
+#log-game-button {
+    background-color: green;
+    margin: 24px;
+    width: 75%;
+}
+#toolbar {
+    padding:0;
+    width:70%;
+    margin-left:-35%;
+}
+
+header {
+    background:#3B8598;
+    width:100%;
+}
+
+h2 img {
+    height: 1.2em;
+    text-align: center;
+    margin-right: 1em;
+    vertical-align: sub;
+}
+
+
+#add-room-button {
+    background-color: green;
+    margin: 24px;
+    width: 75%;
+}
+
+.join-room-button {
+    background-color: yellow;
+    margin: 24px;
+    width: fit-content;
+}
+
+span {
+    font-size: .75em;
+    font-family: monospace;
+    color: darkgoldenrod;
+}
+
+.basic-btn {
+    width:100px;
+    margin:0;
+}
+
+h3 {
+    padding-left: 48px;
+    padding-bottom: 36px;
+}
+
+#page {
+    padding:3em;
+    margin:0;
+}
+
+#page img {
+    margin-top:30px;
+}
+
+h2 {
+    margin:0;
+}
+
+
+@media (max-width: 600px) {
+    #page {
+        padding:1em;
+    }
+    #toolbar {
+        width:90%;
+        margin-left: -45%;
+    }
+}

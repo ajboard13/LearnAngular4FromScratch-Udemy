@@ -1,0 +1,45 @@
+<ng-container *ngIf="currentRoom | async; let currentRoom; else nocontent">
+  <div class="form-container" id="toolbar">
+    <header [@fallIn]="state">
+      <button (click)="logout()" class="basic-btn">Logout</button>
+      <button (click)="goHome()" class="basic-btn">Home</button>
+    </header>
+    <div id="page" [@moveInLeft]="state">
+      <h2>Welcome to {{ currentRoom.roomName }}!</h2>
+      <button id="log-game-button" (click)="createGame()">Log a game</button>
+      <h3>Players:</h3>
+      <ol>
+        <li *ngFor="let player of players | async; let players">
+          {{ player.UserName }}
+          {{ player.acctId }}
+          {{ player.numOfTwoPlayerWins }}
+          {{ player.numOfThreePlayerWins }}
+          {{ player.numOfFourPlayerWins }}
+          {{ player.totalWins }}
+          {{ player.totalVictoryPoints }}
+        </li>
+      </ol>
+      <h3>Games:</h3>
+      <ol>
+        <li *ngFor="let game of games | async; let games">
+          <h3>{{ game.winner }}</h3>
+        </li>
+      </ol>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #nocontent>
+    <div class="form-container" id="toolbar">
+      <header [@fallIn]="state">
+        <button (click)="logout()" class="basic-btn">Logout</button>
+        <button (click)="goHome()" class="basic-btn">Home</button>
+      </header>
+      <div id="page" [@moveInLeft]="state">
+        <h2><img src="{{ photoUrl }}"/>Hey {{ name }}!</h2>
+      </div>
+  
+        <h3>Looks like we couldn't load this room!</h3>
+      
+    </div>
+</ng-template>

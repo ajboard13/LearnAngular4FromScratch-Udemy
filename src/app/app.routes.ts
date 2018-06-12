@@ -8,6 +8,8 @@ import { AuthGuard } from './auth.service';
 import { SignupComponent } from './signup/signup.component';
 import { EmailComponent } from './email/email.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { RoomComponent } from './room/room.component';
+import { GameFormComponent } from './game-form/game-form.component';
 
 export const router: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -15,7 +17,9 @@ export const router: Routes = [
     { path: 'signup', component: SignupComponent },
     { path: 'login-email', component: EmailComponent },
     { path: 'members', component: MembersComponent },
-    { path: 'registration', component: RegistrationComponent }
+    { path: 'registration', component: RegistrationComponent },
+    { path: 'room', component: RoomComponent },
+    { path: 'add-game', component: GameFormComponent }
 
 ]
 

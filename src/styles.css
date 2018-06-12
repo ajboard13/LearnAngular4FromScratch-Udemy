@@ -2,6 +2,8 @@
 body {
     background:#E2E4E6;
     padding-top:4em;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .form-container {
@@ -107,4 +109,9 @@ h2 {
     button {
         font-size:1em;
     }
+}
+
+
+.alc {
+    display: inline;
 }

@@ -1,0 +1,49 @@
+<div class="form-container">
+    <a routerLink="/login" id="goback">Go back</a>
+  
+    <h2>Add Game</h2>
+  
+    <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+      
+    <form [formGroup]="gForm" #formData='ngForm' (ngSubmit)="addGame(gForm.value)">
+      <label for="players-input">Number of Players</label>
+      <input type="number" placeholder="2" [(ngModel)]="numPlayers" formControlName="numPlayers" class="txt" required min="2" max="4" default="2">
+      <div>
+        <label for="gamePlayers">Player one</label>
+        <select name="gamePlayers">
+          <option value="" disabled>Choose player</option>
+          <option *ngFor="let player of players | async" name="gamePlayers" value="{{ player.UserName }}">{{ player.UserName }}</option>
+        </select>
+      </div>
+      <div>
+        <label for="gamePlayers">Player two</label>
+        <select name="gamePlayers">
+          <option value="" disabled>Choose player</option>
+          <option *ngFor="let player of players | async" name="gamePlayers" value="{{ player.UserName }}">{{ player.UserName }}</option>
+        </select>
+      </div>
+      <div [hidden]="numPlayers == 2">
+        <label for="gamePlayers">Player three</label>
+        <select name="gamePlayers">
+          <option value="" disabled>Choose player</option>
+          <option *ngFor="let player of players | async" name="gamePlayers" value="{{ player.UserName }}" >{{ player.UserName }}</option>
+        </select>
+      </div>
+      <div [hidden]="numPlayers != 4">
+        <label for="gamePlayers">Player four</label>
+        <select name="gamePlayers">
+          <option value="" disabled>Choose player</option>
+          <option *ngFor="let player of players | async" name="gamePlayers" value="{{ player.UserName }}" >{{ player.UserName }}</option>
+        </select>
+      </div>
+      <label for="winner-select">Winner</label>
+      <select id="winner-select">
+        <option value="" disabled>Choose player</option>
+        <option *ngFor="let player of players | async" placeholder="winner"  value="{{ player.UserName }}" ng-model="winner">{{ player.UserName }}</option>
+      </select>
+  
+  
+      <button type="submit" [disabled]="!formData.valid" class="basic-btn">Add Game</button>
+    </form>
+  </div>
+  

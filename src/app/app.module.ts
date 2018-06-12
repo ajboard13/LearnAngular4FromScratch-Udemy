@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
 
@@ -15,6 +15,8 @@ import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrationComponent } from './registration/registration.component';
+import { RoomComponent } from './room/room.component';
+import { GameFormComponent } from './game-form/game-form.component';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBoIS_aIZhjpaBUpU-DGvAZQ17_IsGb5AU',
@@ -32,7 +34,9 @@ export const firebaseConfig = {
     EmailComponent,
     SignupComponent,
     MembersComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    RoomComponent,
+    GameFormComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +46,8 @@ export const firebaseConfig = {
     AngularFireModule.initializeApp(firebaseConfig),
     routes,
     AngularFirestoreModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
