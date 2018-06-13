@@ -68,8 +68,13 @@ export class GameFormComponent implements OnInit {
     this.game.date = new Date();
     this.game.numPlayers = this.gamePlayers.length;
     this.game.winner = game.winner;
-    console.log(this.gamePlayers);
-    console.log(this.game);
+
+    this.afs.collection('Rooms/' + this.roomId+'/Games/').add({'date':this.game.date, 'players':this.game.players, 'numPlayers':this.game.numPlayers, 'winner':this.game.winner});
+    this.goBack();
+  }
+
+  goBack() {
+    this.router.navigate(['/room', {'roomId':this.roomId}]);
   }
 
   ngOnInit() {
