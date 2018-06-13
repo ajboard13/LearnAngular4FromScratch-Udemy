@@ -6,7 +6,7 @@ import { moveIn, fallIn, moveInLeft } from '../router.animations';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, docChanges } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { forEach } from '@firebase/util';
 
 interface Player {
@@ -48,40 +48,38 @@ export class GameFormComponent implements OnInit {
   roomDoc: AngularFirestoreDocument<Room>;
   currentRoom: Observable<Room>;
   roomId: string;
-  winner: string;
   winnerSelect: any;
   gForm:FormGroup;
   game: Game;
+  temp : number = 0;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder) {
     this.gForm = fb.group({
     'numPlayers' : [null, Validators.required],
-    'players' : [null, Validators.required],
+    'gamePlayers' : new FormArray([]),
     'winner' : [null, Validators.required],
     'validate' : ''
   });
   }
 
   addGame(game){
-    this.winner = document.getElementById("winner-select").value;
     this.game = new Game();
-    this.game.players = game.gamePlayers;
+    this.game.players = this.gamePlayers;
     this.game.date = new Date();
-    this.game.numPlayers = this.numPlayers;
-    this.game.winner = this.winner;
+    this.game.numPlayers = this.gamePlayers.length;
+    this.game.winner = game.winner;
+    console.log(this.gamePlayers);
     console.log(this.game);
   }
 
   ngOnInit() {
+    this.gamePlayers = [];
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = params.get('roomId');
       this.roomId = id;
     })
     this.getRoomInfo();
     this.numPlayers = 2;
-    this.winnerSelect = document.getElementById("winner-select")
-    this.winnerSelect.addEventListener("change", this.updateWinner);
-    console.log(this.players);
   }
 
   getRoomInfo() {
@@ -95,8 +93,39 @@ export class GameFormComponent implements OnInit {
     this.players = this.playersCol.valueChanges();
   }
 
-  updateWinner(){
-    this.winner = document.getElementById("winner-select").value;
-    console.log(this.winner);
+  onCheckChange(event) {
+    /* Selected */
+    if(event.target.checked){
+      // Add a new control in the arrayForm
+      this.gamePlayers.push(event.target.value);
+    }
+    /* unselected */
+    else{
+      // find the unselected element
+      let i: number = 0;
+  
+      this.gamePlayers.forEach((player: string) => {
+        if(player == event.target.value) {
+          // Remove the unselected element from the arrayForm
+        var index = this.gamePlayers.indexOf(event.target.value);
+        if (index > -1) {
+          this.gamePlayers.splice(index,1);
+        }
+        return;
+        }
+        i++;
+      });
+    }
+    this.temp = this.gamePlayers.length;
+    console.log(this.gamePlayers);
   }
+
+  isChecked(name) {
+    if(this.gamePlayers.indexOf(name) != -1){
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 }

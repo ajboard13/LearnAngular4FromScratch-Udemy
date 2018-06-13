@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
 
@@ -48,6 +48,7 @@ export const firebaseConfig = {
     AngularFirestoreModule,
     BrowserAnimationsModule,
     ReactiveFormsModule
+    
   ],
   providers: [AuthGuard],
   bootstrap: [AppComponent]
