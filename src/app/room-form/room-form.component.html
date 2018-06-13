@@ -5,7 +5,7 @@
   
     <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
       
-    <form #formData='ngForm' (ngSubmit)="addRoom(formData)">
+    <form #formData='ngForm' (ngSubmit)="addRoom()">
   
       <label for="roomName">Room Name</label>
       <input type="text" placeholder="Room Name" [(ngModel)]="roomName" name="roomName" class="txt" required>

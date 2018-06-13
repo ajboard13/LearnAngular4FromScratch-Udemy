@@ -45,6 +45,7 @@ export class RoomFormComponent implements OnInit {
   acctId: string;
   error: string;
   exists:boolean = false;
+  winTypes ={};
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
     this.af.authState.subscribe(auth => {
@@ -74,21 +75,23 @@ export class RoomFormComponent implements OnInit {
     })
   }
 
-  addRoom(formData){
+  addRoom(){
+    for(var i = JSON.parse(this.gameType).minPlayers; i <= JSON.parse(this.gameType).maxPlayers; i++){
+      var temp = i+'PlayerWins';
+      this.winTypes[i+'PlayerWins'] = 0;
+    }
     this.afs.doc('Rooms/'+this.roomName).ref.get().then((documentSnapshot) => {
       if(documentSnapshot.exists === true){
         this.error = "This already exists.";
       } else {
         this.addRoomDoc();
       }
-    })
+    });
   }
 
   addRoomDoc(){
-    console.log("form submitted");
-    console.log(JSON.parse(this.gameType).name+this.roomName+this.roomPassword+ this.error );
     this.afs.collection('Rooms').doc(this.roomName).set({'roomName': this.roomName, 'roomPassword': this.roomPassword, 'gameType': JSON.parse(this.gameType).name, 'playerCount': 1});
-    this.afs.collection('Rooms/'+this.roomName+'/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin': true, 'totalWins': 0, 'winPercent':0})
+    this.afs.collection('Rooms/'+this.roomName+'/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin': true, 'totalWins': 0, 'winPercent':0, 'winTypes': this.winTypes})
   }
 
 }
