@@ -1,0 +1,94 @@
+import { Component, OnInit } from '@angular/core';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { moveIn, fallIn, moveInLeft } from '../router.animations';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, docChanges } from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+
+
+interface GameType {
+  name: string;
+  minPlayers: number;
+  maxPlayers: number;
+}
+
+interface Player {
+  UserName: string;
+  isAdmin: boolean;
+  numOfTwoPlayerWins: number;
+  numOfThreePlayerWins: number;
+  numOfFourPlayerWins: number;
+  totalVictoryPoints: number;
+  winPercent: number;
+}
+
+@Component({
+  selector: 'app-room-form',
+  templateUrl: './room-form.component.html',
+  styleUrls: ['./room-form.component.css'],
+  animations: [moveIn(), fallIn(), moveInLeft()]
+})
+export class RoomFormComponent implements OnInit {
+
+  gamesCol: AngularFirestoreCollection<GameType>;
+  games: Observable<GameType[]>;
+  gameType: any;
+  roomName: string;
+  roomPassword: string = '';
+  playerDoc: AngularFirestoreDocument<Player>;
+  playerVC: Observable<Player>;
+  player: Player;
+  name: string;
+  photoUrl: string;
+  acctId: string;
+  error: string;
+  exists:boolean = false;
+
+  constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
+    this.af.authState.subscribe(auth => {
+      if(auth) {
+        this.name = auth.displayName;
+        this.photoUrl = auth.photoURL;
+        this.acctId = auth.uid;
+        this.getPlayerInfo();
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.getGames();
+  }
+
+  getGames(){
+    this.gamesCol = this.afs.collection('Games');
+    this.games = this.gamesCol.valueChanges();
+  }
+
+  getPlayerInfo() {
+    this.playerDoc = this.afs.doc('Players/' + this.acctId);
+    this.playerVC = this.playerDoc.valueChanges();
+    this.playerVC.subscribe(player => {
+      this.player = player;
+    })
+  }
+
+  addRoom(formData){
+    this.afs.doc('Rooms/'+this.roomName).ref.get().then((documentSnapshot) => {
+      if(documentSnapshot.exists === true){
+        this.error = "This already exists.";
+      } else {
+        this.addRoomDoc();
+      }
+    })
+  }
+
+  addRoomDoc(){
+    console.log("form submitted");
+    console.log(JSON.parse(this.gameType).name+this.roomName+this.roomPassword+ this.error );
+    this.afs.collection('Rooms').doc(this.roomName).set({'roomName': this.roomName, 'roomPassword': this.roomPassword, 'gameType': JSON.parse(this.gameType).name, 'playerCount': 1});
+    this.afs.collection('Rooms/'+this.roomName+'/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin': true, 'totalWins': 0, 'winPercent':0})
+  }
+
+}

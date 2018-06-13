@@ -1,0 +1,24 @@
+<div class="form-container">
+    <a routerLink="/members" id="goback">Go back</a>
+  
+    <h2>New Room</h2>
+  
+    <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+      
+    <form #formData='ngForm' (ngSubmit)="addRoom(formData)">
+  
+      <label for="roomName">Room Name</label>
+      <input type="text" placeholder="Room Name" [(ngModel)]="roomName" name="roomName" class="txt" required>
+      <label for="roomPassword">Room Password</label>
+      <input type="password" placeholder="optional" [(ngModel)]="roomPassword" name="roomPassword" class="txt">
+  
+      <label for="winner-select">Game Type</label>
+      <select name="winner-select" [(ngModel)]="gameType"  required>
+        <option value='' disabled>Choose game type</option>
+        <option *ngFor="let gameType of games | async" placeholder="game type" [value]="gameType | json">{{ gameType.name }} <span>{{ gameType.minPlayers }}-{{ gameType.maxPlayers }} Players</span></option>
+      </select>
+  
+      <button type="submit" [disabled]="!formData.valid" class="basic-btn">Create Room</button>
+    </form>
+  </div>
+  

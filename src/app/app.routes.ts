@@ -10,6 +10,7 @@ import { EmailComponent } from './email/email.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { RoomComponent } from './room/room.component';
 import { GameFormComponent } from './game-form/game-form.component';
+import { RoomFormComponent } from './room-form/room-form.component';
 
 export const router: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,7 +20,8 @@ export const router: Routes = [
     { path: 'members', component: MembersComponent },
     { path: 'registration', component: RegistrationComponent },
     { path: 'room', component: RoomComponent },
-    { path: 'add-game', component: GameFormComponent }
+    { path: 'add-game', component: GameFormComponent },
+    { path: 'room-form', component: RoomFormComponent}
 
 ]
 

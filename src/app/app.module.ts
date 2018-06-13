@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrationComponent } from './registration/registration.component';
 import { RoomComponent } from './room/room.component';
 import { GameFormComponent } from './game-form/game-form.component';
+import { RoomFormComponent } from './room-form/room-form.component';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBoIS_aIZhjpaBUpU-DGvAZQ17_IsGb5AU',
@@ -36,7 +37,8 @@ export const firebaseConfig = {
     MembersComponent,
     RegistrationComponent,
     RoomComponent,
-    GameFormComponent
+    GameFormComponent,
+    RoomFormComponent
   ],
   imports: [
     BrowserModule,

@@ -14,7 +14,7 @@
       <label for="winner-select">Winner</label>
       <select name="winner-select" formControlName="winner" [(ngModel)]="winner"  required>
         <option value='' disabled>Choose player</option>
-        <option *ngFor="let player of players | async" placeholder="winner" [disabled]="isChecked(player.UserName)" [value]="player.UserName">{{ player.UserName }}</option>
+        <option *ngFor="let player of players | async" placeholder="winner" [disabled]="isChecked(player.UserName)" [value]="player | json">{{ player.UserName }}</option>
       </select>
   
   

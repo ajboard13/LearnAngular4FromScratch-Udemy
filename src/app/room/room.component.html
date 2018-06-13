@@ -22,7 +22,7 @@
       <h3>Games:</h3>
       <ol>
         <li *ngFor="let game of games | async; let games">
-          <h3>{{ game.winner }}</h3>
+          {{ game.winner }}
         </li>
       </ol>
     </div>
