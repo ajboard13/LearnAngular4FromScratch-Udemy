@@ -44,16 +44,23 @@ export class RoomComponent implements OnInit {
   name: any;
   photoUrl: string;
   acctId: string;
-  player: AngularFirestoreDocument<Player>;
-  currentPlayer: Observable<Player>;
   roomId: string;
   playersCol: AngularFirestoreCollection<Player>;
   players: Observable<Player[]>;
   gamesCol: AngularFirestoreCollection<Game>;
   games: Observable<Game[]>;
+  playerDoc: AngularFirestoreDocument<Player>;
+  playerVC: Observable<Player>;
+  player: any;
+  gameDoc: AngularFirestoreDocument<Game>;
+  gameVC: Observable<Game>;
+  gameName:string;
+  gameType:any;
+  winTypes= {};
 
   roomDoc: AngularFirestoreDocument<Room>;
   currentRoom: Observable<Room>;
+  room: any;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore, private route: ActivatedRoute) {
     this.af.authState.subscribe(auth => {
@@ -61,6 +68,8 @@ export class RoomComponent implements OnInit {
         this.name = auth.displayName;
         this.photoUrl = auth.photoURL;
         this.acctId = auth.uid;
+        this.getRoomInfo();
+        this.getPlayersInfo();
         this.getPlayerInfo();
       }
     });
@@ -68,14 +77,37 @@ export class RoomComponent implements OnInit {
   getRoomInfo() {
     this.roomDoc = this.afs.doc('Rooms/' + this.roomId);
     this.currentRoom = this.roomDoc.valueChanges();
-    this.getPlayerInfo();
-    this.getPlayersInfo();
+    this.currentRoom.subscribe(game => {
+      this.gameName = game.gameType;
+      this.getGameTypeInfo();
+    });
     this.getGamesInfo();
   }
 
+  getGameTypeInfo() {
+
+    console.log(this.gameName)
+    this.gameDoc = this.afs.doc('Games/'+this.gameName);
+    this.gameVC = this.gameDoc.valueChanges();
+    this.gameVC.subscribe(game => {
+      this.gameType = game;
+      this.setWinTypeObj();
+    });
+  }
+
+  setWinTypeObj() {
+    for(var i = this.gameType.minPlayers; i <= this.gameType.maxPlayers; i++){
+      this.winTypes[i+'PlayerWins'] = 0;
+    }
+  }
+
   getPlayerInfo() {
-    this.player = this.afs.doc('Players/' + this.acctId);
-    this.currentPlayer = this.player.valueChanges();
+    this.playerDoc = this.afs.doc('Players/' + this.acctId);
+    this.playerVC = this.playerDoc.valueChanges();
+    this.playerVC.subscribe(player => {
+      this.player = player;
+      this.checkIfPlayerInRoom();
+    });
   }
 
   getPlayersInfo() {
@@ -101,12 +133,19 @@ export class RoomComponent implements OnInit {
      this.router.navigateByUrl('/login');
   }
 
+  checkIfPlayerInRoom() {
+    this.afs.doc('Rooms/'+this.roomId+'/Players/'+this.acctId).ref.get().then((documentSnapshot) => {
+      if(documentSnapshot.exists !== true){
+        this.afs.collection('Rooms/'+this.roomId + '/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin':false, 'acctId': this.acctId, 'totalWins':0, 'winPercent': 0, 'winTypes':this.winTypes});
+      } 
+    });
+  }
+
   ngOnInit() {
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = params.get('roomId');
       this.roomId = id;
     })
-    this.getRoomInfo();
   }
 
 }

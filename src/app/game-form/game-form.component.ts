@@ -70,7 +70,11 @@ export class GameFormComponent implements OnInit {
     var winner = JSON.parse(game.winner);
     this.game.winner = winner.UserName;
     this.updateWinnerStats(winner);
-    this.afs.collection('Rooms/' + this.roomId+'/Games/').add({'date':this.game.date, 'players':this.game.players, 'numPlayers':this.game.numPlayers, 'winner':this.game.winner});
+    try {
+      this.afs.collection('Rooms/' + this.roomId+'/Games/').add({'date':this.game.date, 'players':this.game.players, 'numPlayers':this.game.numPlayers, 'winner':this.game.winner});
+    } catch (e){
+      this.afs.collection('Rooms/' + this.roomId+'/Games/').doc('game1').set({'date':this.game.date, 'players':this.game.players, 'numPlayers':this.game.numPlayers, 'winner':this.game.winner});
+    }
     this.goBack();
   }
 

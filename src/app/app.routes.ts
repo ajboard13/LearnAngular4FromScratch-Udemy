@@ -11,6 +11,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { RoomComponent } from './room/room.component';
 import { GameFormComponent } from './game-form/game-form.component';
 import { RoomFormComponent } from './room-form/room-form.component';
+import { GameTypeFormComponent } from './game-type-form/game-type-form.component';
 
 export const router: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,7 +22,8 @@ export const router: Routes = [
     { path: 'registration', component: RegistrationComponent },
     { path: 'room', component: RoomComponent },
     { path: 'add-game', component: GameFormComponent },
-    { path: 'room-form', component: RoomFormComponent}
+    { path: 'room-form', component: RoomFormComponent},
+    { path: 'game-type-form', component: GameTypeFormComponent}
 
 ]
 

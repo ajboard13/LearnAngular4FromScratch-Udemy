@@ -44,7 +44,7 @@ export class RegistrationComponent implements OnInit {
       this.error = "Username can not be empty"
     } 
     else {
-      this.afs.collection('Players').doc(this.userId).set({'UserName': this.UserName, 'isAdmin': false, 'numOfFourPlayerWins':0, 'numOfThreePlayerWins':0, 'numOfTwoPlayerWins':0, 'totalVictoryPoints':0, 'winPercent':0});
+      this.afs.collection('Players').doc(this.userId).set({'UserName': this.UserName, 'isAdmin': false, 'acctId':this.userId, 'totalWins':0, 'winPercent':0});
       this.goHome();
     }
   }

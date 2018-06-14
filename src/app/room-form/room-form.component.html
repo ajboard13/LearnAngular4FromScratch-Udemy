@@ -1,4 +1,4 @@
-<div class="form-container">
+<div class="form-container" [@moveInLeft]='state'>
     <a routerLink="/members" id="goback">Go back</a>
   
     <h2>New Room</h2>
@@ -17,6 +17,8 @@
         <option value='' disabled>Choose game type</option>
         <option *ngFor="let gameType of games | async" placeholder="game type" [value]="gameType | json">{{ gameType.name }} <span>{{ gameType.minPlayers }}-{{ gameType.maxPlayers }} Players</span></option>
       </select>
+      
+      <a routerLink="/game-type-form" routerLinkActive="active" class="alc">Don't see the game you are looking for? <strong>Add a new option here</strong></a>
   
       <button type="submit" [disabled]="!formData.valid" class="basic-btn">Create Room</button>
     </form>

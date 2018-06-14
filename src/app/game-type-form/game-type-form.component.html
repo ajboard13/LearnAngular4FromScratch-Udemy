@@ -1,0 +1,21 @@
+<div class="form-container" [@moveInLeft]='state'>
+    <a routerLink="/members" id="goback">Go back</a>
+  
+    <h2>New Game</h2>
+  
+    <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+      
+    <form #formData='ngForm' (ngSubmit)="addGame()">
+  
+      <label for="name">Game Name</label>
+      <input type="text" placeholder="Room Name" [(ngModel)]="name" name="name" class="txt" required>
+      <label for="minPlayers">Minimum Players</label>
+      <input type="number" placeholder="min" [(ngModel)]="minPlayers" name="minPlayers" class="txt" required>
+      <label for="maxPlayers">Maximum Players</label>
+      <input type="number" placeholder="max" [(ngModel)]="maxPlayers" name="maxPlayers" class="txt" required>
+
+  
+      <button type="submit" [disabled]="!formData.valid" class="basic-btn">Add New Game</button>
+    </form>
+  </div>
+  

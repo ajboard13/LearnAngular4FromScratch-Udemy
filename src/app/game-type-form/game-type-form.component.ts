@@ -6,12 +6,13 @@ import { moveIn, fallIn, moveInLeft } from '../router.animations';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, docChanges } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 
-
-interface GameType {
-  name: string;
-  minPlayers: number;
-  maxPlayers: number;
+class Game {
+  date: Date;
+  numPlayers: number;
+  players: string[];
+  winner: string;
 }
 
 interface Player {
@@ -25,32 +26,27 @@ interface Player {
 }
 
 @Component({
-  selector: 'app-room-form',
-  templateUrl: './room-form.component.html',
-  styleUrls: ['./room-form.component.css'],
+  selector: 'app-game-type-form',
+  templateUrl: './game-type-form.component.html',
+  styleUrls: ['./game-type-form.component.css'],
   animations: [moveIn(), fallIn(), moveInLeft()]
 })
-export class RoomFormComponent implements OnInit {
-
-  gamesCol: AngularFirestoreCollection<GameType>;
-  games: Observable<GameType[]>;
-  gameType: any;
-  roomName: string;
-  roomPassword: string = '';
-  playerDoc: AngularFirestoreDocument<Player>;
-  playerVC: Observable<Player>;
-  player: Player;
+export class GameTypeFormComponent implements OnInit {
+  userName: string;
   name: string;
+  minPlayers: number;
+  maxPlayers:number;
   photoUrl: string;
   acctId: string;
+  playerDoc: AngularFirestoreDocument<Player>;
+  playerVC: Observable<Player>;
+  player: any;
   error: string;
-  exists:boolean = false;
-  winTypes ={};
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
     this.af.authState.subscribe(auth => {
       if(auth) {
-        this.name = auth.displayName;
+        this.userName = auth.displayName;
         this.photoUrl = auth.photoURL;
         this.acctId = auth.uid;
         this.getPlayerInfo();
@@ -59,13 +55,8 @@ export class RoomFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getGames();
   }
 
-  getGames(){
-    this.gamesCol = this.afs.collection('Games');
-    this.games = this.gamesCol.valueChanges();
-  }
 
   getPlayerInfo() {
     this.playerDoc = this.afs.doc('Players/' + this.acctId);
@@ -75,27 +66,15 @@ export class RoomFormComponent implements OnInit {
     })
   }
 
-  addRoom(){
-    for(var i = JSON.parse(this.gameType).minPlayers; i <= JSON.parse(this.gameType).maxPlayers; i++){
-      this.winTypes[i+'PlayerWins'] = 0;
-    }
-    this.afs.doc('Rooms/'+this.roomName).ref.get().then((documentSnapshot) => {
+  addGame() {
+    this.afs.doc('Games/'+this.name).ref.get().then((documentSnapshot) => {
       if(documentSnapshot.exists === true){
         this.error = "This already exists.";
       } else {
-        this.addRoomDoc();
-        this.goBack();
+        this.afs.collection('Games').doc(this.name).set({'name':this.name, 'minPlayers': this.minPlayers, 'maxPlayers': this.maxPlayers});
+        this.error = "Game Added!"
       }
     });
-  }
-
-  addRoomDoc(){
-    this.afs.collection('Rooms').doc(this.roomName).set({'roomName': this.roomName, 'roomPassword': this.roomPassword, 'gameType': JSON.parse(this.gameType).name, 'playerCount': 1});
-    this.afs.collection('Rooms/'+this.roomName+'/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin': true, 'totalWins': 0, 'winPercent':0, 'winTypes': this.winTypes})
-  }
-
-  goBack(){
-    this.router.navigateByUrl('/members');
   }
 
 }
