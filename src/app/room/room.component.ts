@@ -31,6 +31,8 @@ interface Room {
   players: string[];
   name: string;
   pass: string;
+  gameType: string;
+  playerCount: number;
 }
 
 @Component({
@@ -57,36 +59,27 @@ export class RoomComponent implements OnInit {
   gameName:string;
   gameType:any;
   winTypes= {};
+  isInRoom: boolean = true;
+  playerCount: number;
 
   roomDoc: AngularFirestoreDocument<Room>;
   currentRoom: Observable<Room>;
   room: any;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore, private route: ActivatedRoute) {
-    this.af.authState.subscribe(auth => {
-      if(auth) {
-        this.name = auth.displayName;
-        this.photoUrl = auth.photoURL;
-        this.acctId = auth.uid;
-        this.getRoomInfo();
-        this.getPlayersInfo();
-        this.getPlayerInfo();
-      }
-    });
   }
   getRoomInfo() {
     this.roomDoc = this.afs.doc('Rooms/' + this.roomId);
     this.currentRoom = this.roomDoc.valueChanges();
-    this.currentRoom.subscribe(game => {
-      this.gameName = game.gameType;
+    this.currentRoom.subscribe(room => {
+      this.gameName = room.gameType;
+      this.playerCount = room.playerCount;
       this.getGameTypeInfo();
     });
     this.getGamesInfo();
   }
 
   getGameTypeInfo() {
-
-    console.log(this.gameName)
     this.gameDoc = this.afs.doc('Games/'+this.gameName);
     this.gameVC = this.gameDoc.valueChanges();
     this.gameVC.subscribe(game => {
@@ -136,8 +129,12 @@ export class RoomComponent implements OnInit {
   checkIfPlayerInRoom() {
     this.afs.doc('Rooms/'+this.roomId+'/Players/'+this.acctId).ref.get().then((documentSnapshot) => {
       if(documentSnapshot.exists !== true){
+        this.isInRoom = false;
         this.afs.collection('Rooms/'+this.roomId + '/Players').doc(this.acctId).set({'UserName': this.player.UserName, 'isAdmin':false, 'acctId': this.acctId, 'totalWins':0, 'winPercent': 0, 'winTypes':this.winTypes});
-      } 
+        this.afs.doc('Rooms/'+this.roomId).update({'playerCount': this.playerCount+1});
+      } else {
+        this.isInRoom = true;
+      }
     });
   }
 
@@ -145,7 +142,17 @@ export class RoomComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = params.get('roomId');
       this.roomId = id;
-    })
+    });
+    this.af.authState.subscribe(auth => {
+      if(auth) {
+        this.name = auth.displayName;
+        this.photoUrl = auth.photoURL;
+        this.acctId = auth.uid;
+        this.getPlayerInfo();
+        this.getRoomInfo();
+        this.getPlayersInfo();
+      }
+    });
   }
 
 }

@@ -13,9 +13,15 @@ interface Player {
   UserName: string;
   acctId: string;
   isAdmin: boolean;
-  numOfTwoPlayerWins: number;
-  numOfThreePlayerWins: number;
-  numOfFourPlayerWins: number;
+  winTypes: {
+    '1PlayerWins': number,
+    '2PlayerWins': number,
+    '3PlayerWins': number,
+    '4PlayerWins': number,
+    '5PlayerWins': number,
+    '6PlayerWins': number
+  }
+  totalWins:number;
   totalVictoryPoints: number;
   winPercent: number;
 }
@@ -31,6 +37,8 @@ interface Room {
   players: string[];
   name: string;
   pass: string;
+  minPlayers: number;
+  maxPlayers: number;
 }
 
 @Component({
@@ -52,8 +60,16 @@ export class GameFormComponent implements OnInit {
   gForm:FormGroup;
   game: Game;
   temp : number = 0;
+  winTypes: {};
+  gameType:any;
+  minPlayers: number;
+  maxPlayers: number;
+  winnerGLobal: AngularFirestoreDocument<Player>;
+  winnerGlobalVC: Observable<Player>;
+  globalWins: number;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore, private route: ActivatedRoute, private fb: FormBuilder) {
+    this.winTypes = {};
     this.gForm = fb.group({
     'numPlayers' : [null, Validators.required],
     'gamePlayers' : new FormArray([]),
@@ -79,7 +95,26 @@ export class GameFormComponent implements OnInit {
   }
 
   updateWinnerStats(winner) {
-    this.afs.doc('Players/'+winner.acctId).update({'totalWins': winner.totalWins + 1});
+    this.currentRoom.subscribe(room => {
+      this.minPlayers = room.minPlayers;
+      this.maxPlayers = room.maxPlayers;
+      for(var i = this.minPlayers; i <= this.maxPlayers; i++){
+        if(this.gamePlayers.length == i){
+          this.winTypes[i+'PlayerWins'] = winner.winTypes[i+'PlayerWins'] +1;
+        } else {
+          this.winTypes[i+'PlayerWins'] = winner.winTypes[i+'PlayerWins'];
+        }
+      }
+      this.afs.doc('Rooms/'+this.roomId+'/Players/'+winner.acctId).update({'winTypes':this.winTypes});
+    });
+    
+    this.winnerGLobal = this.afs.doc('Players/'+winner.acctId);
+    this.winnerGlobalVC = this.winnerGLobal.valueChanges();
+    this.winnerGlobalVC.take(1).subscribe(playerW => {
+      this.globalWins = playerW.totalWins;
+      this.winnerGLobal.update({'totalWins': this.globalWins +1});
+    });
+    this.afs.doc('Players/'+winner.acctId).update({'totalWins': this.globalWins + 1});
     this.afs.doc('Rooms/'+this.roomId+'/Players/'+winner.acctId).update({'totalWins':winner.totalWins+1});
   }
 
@@ -92,7 +127,8 @@ export class GameFormComponent implements OnInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = params.get('roomId');
       this.roomId = id;
-    })
+    });
+    
     this.getRoomInfo();
     this.numPlayers = 2;
   }
