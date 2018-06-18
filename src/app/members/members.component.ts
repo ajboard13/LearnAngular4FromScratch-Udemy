@@ -30,6 +30,7 @@ interface Room {
   players: Player[];
   name: string;
   pass: string;
+  isLocked: boolean;
 }
 
 @Component({
@@ -85,6 +86,10 @@ export class MembersComponent implements OnInit {
 
   goToRoom(roomId){
     this.router.navigate(['/room', {'roomId':roomId}]);
+  }
+
+  goToLockedRoom(roomId){
+    this.router.navigate(['/room-sign-in', {'roomId':roomId}]);
   }
 
   logout() {

@@ -47,6 +47,7 @@ export class RoomFormComponent implements OnInit {
   error: string;
   exists:boolean = false;
   winTypes ={};
+  isLocked:boolean;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore) {
     this.af.authState.subscribe(auth => {
@@ -91,7 +92,13 @@ export class RoomFormComponent implements OnInit {
   }
 
   addRoomDoc(){
-    this.afs.collection('Rooms').doc(this.roomName).set({'roomName': this.roomName, 'roomPassword': this.roomPassword, 'gameType': JSON.parse(this.gameType).name, 'playerCount': 1, 'minPlayers': JSON.parse(this.gameType).minPlayers, 'maxPlayers': JSON.parse(this.gameType).maxPlayers});
+
+    if(this.roomPassword == ''){
+      this.isLocked = false;
+    } else {
+      this.isLocked = true;
+    }
+    this.afs.collection('Rooms').doc(this.roomName).set({'roomName': this.roomName, 'roomPassword': this.roomPassword, 'isLocked':this.isLocked, 'gameType': JSON.parse(this.gameType).name, 'playerCount': 1, 'minPlayers': JSON.parse(this.gameType).minPlayers, 'maxPlayers': JSON.parse(this.gameType).maxPlayers});
     this.afs.collection('Rooms/'+this.roomName+'/Players').doc(this.acctId).set({'UserName': this.player.UserName,'acctId':this.player.acctId, 'isAdmin': true, 'totalWins': 0, 'winPercent':0, 'winTypes': this.winTypes})
   }
 

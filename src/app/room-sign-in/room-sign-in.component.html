@@ -1,0 +1,34 @@
+
+<ng-container *ngIf="room | async; let room; else nocontent">
+  <div class="form-container">
+    <a routerLink="/members" id="goback">Go back</a>
+
+    <h2>{{ room.roomName }}</h2>
+
+    <span class="error" *ngIf="error" [@fallIn]='state'>{{ error }}</span>
+      
+    <form #formData='ngForm' (ngSubmit)="logInToRoom()">
+
+      <input type="text" placeholder="Room Password" [(ngModel)]="roomPass" name="roomPass" class="txt" required>
+
+
+      <button type="submit" [disabled]="!formData.valid" class="basic-btn">Log into {{ room.roomName }}</button>
+    </form>
+  </div>
+</ng-container>
+  
+
+<ng-template #nocontent>
+    <div class="form-container" id="toolbar">
+      <header [@fallIn]="state">
+        <button (click)="logout()" class="basic-btn">Logout</button>
+        <button (click)="goHome()" class="basic-btn">Home</button>
+      </header>
+      <div id="page" [@moveInLeft]="state">
+        <h2><img src="{{ photoUrl }}"/>Hey {{ name }}!</h2>
+      </div>
+  
+        <h3>Looks like we couldn't load this room!</h3>
+      
+    </div>
+</ng-template>
