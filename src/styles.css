@@ -2,8 +2,12 @@
 body {
     background:#E2E4E6;
     padding-top:4em;
-    overflow-x: hidden;
+    overflow-x: scroll;
     overflow-y: scroll;
+}
+
+:host(router-outlet){
+    position: unset !important;
 }
 
 .form-container {

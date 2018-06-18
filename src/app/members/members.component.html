@@ -4,19 +4,22 @@
     <header [@fallIn]="state">
       <button (click)="logout()" class="basic-btn">Logout</button>
     </header>
-    <div id="page" [@moveInLeft]="state">
-      <h2><img src="{{ photoUrl }}"/>Hey {{ currentPlayer.UserName }}!</h2>
-      <button id="add-room-button" routerLink="/room-form">Create new room</button>
-      <ul>
-        <li *ngFor="let room of rooms | async as rooms">
-          <ng-container *ngIf="!room.data.isLocked; else lockedRoom">
-            <h3>{{ room.data.roomName }}   <span>Players: {{ room.data.playerCount }}</span>   <button (click)="goToRoom(room.id)" class="join-room-button">Join!</button></h3>
-          </ng-container>
-          <ng-template #lockedRoom>
-            <h3>{{ room.data.roomName }}   <span>Players: {{ room.data.playerCount }}</span>   <button (click)="goToLockedRoom(room.id)" class="join-room-button">Join! (locked)</button></h3>
-          </ng-template>
-        </li>
-      </ul>
+    
+    <div class="content">
+      <div id="page" infinite-scroll [@moveInLeft]="state">
+        <h2><img src="{{ photoUrl }}"/>Hey {{ currentPlayer.UserName }}!</h2>
+        <button id="add-room-button" routerLink="/room-form">Create new room</button>
+        <ul>
+          <li *ngFor="let room of rooms | async as rooms">
+            <ng-container *ngIf="!room.data.isLocked; else lockedRoom">
+              <h3>{{ room.data.roomName }}   <span>Players: {{ room.data.playerCount }}</span>   <button (click)="goToRoom(room.id)" class="join-room-button">Join!</button></h3>
+            </ng-container>
+            <ng-template #lockedRoom>
+              <h3>{{ room.data.roomName }}   <span>Players: {{ room.data.playerCount }}</span>   <button (click)="goToLockedRoom(room.id)" class="join-room-button">Join! (locked)</button></h3>
+            </ng-template>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </ng-container>

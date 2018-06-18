@@ -20,6 +20,7 @@ import { GameFormComponent } from './game-form/game-form.component';
 import { RoomFormComponent } from './room-form/room-form.component';
 import { GameTypeFormComponent } from './game-type-form/game-type-form.component';
 import { RoomSignInComponent } from './room-sign-in/room-sign-in.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 export const firebaseConfig = {
   apiKey: 'AIzaSyBoIS_aIZhjpaBUpU-DGvAZQ17_IsGb5AU',
@@ -53,7 +54,8 @@ export const firebaseConfig = {
     routes,
     AngularFirestoreModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InfiniteScrollModule
     
   ],
   providers: [AuthGuard],

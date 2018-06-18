@@ -24,6 +24,7 @@
     "angularfire2": "^5.0.0-rc.10",
     "core-js": "^2.5.4",
     "firebase": "^5.0.4",
+    "ngx-infinite-scroll": "^6.0.1",
     "promise-polyfill": "8.0.0",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.2.0",

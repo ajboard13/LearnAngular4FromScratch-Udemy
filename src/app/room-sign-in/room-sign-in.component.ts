@@ -8,6 +8,13 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { Timestamp } from 'rxjs';
 
+interface Player {
+  UserName: string;
+  isAdmin: boolean;
+  winPercent: number;
+  acctId:string;
+}
+
 interface Room {
   games: string[];
   players: string[];
@@ -32,6 +39,7 @@ export class RoomSignInComponent implements OnInit {
   roomId: string;
   roomPass: string;
   error: string;
+  playerCol: AngularFirestoreCollection<Player>;
 
   constructor(public af: AngularFireAuth,private router: Router, private afs: AngularFirestore, private route: ActivatedRoute) {
     this.af.authState.subscribe(auth => {
@@ -66,13 +74,14 @@ export class RoomSignInComponent implements OnInit {
   }
 
   checkIfPlayerInRoom() {
-    this.afs.collection('Rooms/'+this.roomId+'/Players/').valueChanges().subscribe(players => {
+    this.playerCol = this.afs.collection('Rooms/'+this.roomId+'/Players/');
+    this.playerCol.valueChanges().subscribe(players => {
       for(let player of players) {
         if(this.acctId == player.acctId){
           this.router.navigate(['/room', {'roomId':this.roomId}]);    
         }
       }
-    })
+    });
   }
 
   logout() {
